@@ -22,10 +22,10 @@ the current subpage should be displayed between these two bars.
 
 
 
-1. 'OK' - will quit the  quiz and take user to the demanded 
-              subpage
-2. 'Cancel' - will hide the popup and keep the user in the 
-                              question page.
+    1. 'OK' - will quit the  quiz and take user to the demanded 
+                subpage
+    2. 'Cancel' - will hide the popup and keep the user in the 
+                                question page.
 
 **bottom bar** should display info about copyrights, app's creators and all
              relevant links. Constantly fixed to the bottom of the screen.
