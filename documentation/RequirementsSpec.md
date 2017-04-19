@@ -9,7 +9,7 @@
 
 ## User stories
 
-###Guest
+### Guest
 * After entering the main page I can see all the quizzes available and pick any
   of them
 * I can see a footer bar with some info on app's creators with relevant links
