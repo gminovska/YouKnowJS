@@ -107,5 +107,6 @@ G: Where are those buttons? Are they below the score, or in the header that will
 ## Nice to have features
 * Admin can add/modify/delete the content of the quizzes
 * User can see some fancy diagrams in his/her personal score page
+* User can save partial progress on a quiz and resume the quiz at a later time
 
 
