@@ -41,8 +41,8 @@
        button to take the quiz) or should a click on a quiz directly start the
        quiz?
     K: We can have a CSS overlay on each quiz button/image that will display 
-       these info on hover? Another popup would be somewhat conflicting with
-       warning... Or we can simply have a description
+       these info on hover? **I like that idea, but hover is impossible on a mobile phone. So if we want our app to be mobile friendly, (which I think it should be)hover is a no go**  Another popup would be somewhat conflicting with
+       warning... Or we can simply have a description. **Maybe the same message can inform on the quiz contents and that the scores will not be saved if not logged in. Give the option to login or take the quiz below the message**
 
 * If I pick a quiz and decide not to log in after the warning was displayed,
   the first question from a chosen quiz is displayed
@@ -89,6 +89,11 @@
   1. Main page
   2. Global leaderboard
   3. My personal score page
+
+G: Where are those buttons? Are they below the score, or in the header that will be fixed on top and always accessible? It would be redundant if they are in both places..
+
+* If I click on the navbar link while taking a quiz, I should see a warning that the quiz will be discontinued and the score not saved.
+* That warning will give me an option to quit the quiz and go to the link I clicked, or stay and continue
 
 ### Admin
 * I can log in 
