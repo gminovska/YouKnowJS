@@ -16,7 +16,7 @@
    
     "server": "SET NODE_ENV=development & nodemon server.js",
     "start": "SET NODE_ENV=development & node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-    "bundle-server": "webpack -p && NODE_ENV=development nodemon server.js",
+    "bundle-server": "webpack -p & SET NODE_ENV=development & nodemon server.js",
     "build-w": "SET NODE_ENV=production & webpack -p"   
   },
   "devDependencies": {
