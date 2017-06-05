@@ -12,12 +12,10 @@
     "front-dev": "NODE_ENV=development webpack-dev-server",
     "back-dev": "webpack -p && NODE_ENV=development nodemon server.js",
     "build": "NODE_ENV=production webpack -p",
-
-   
     "server": "SET NODE_ENV=development & nodemon server.js",
     "start": "SET NODE_ENV=development & node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "bundle-server": "webpack -p & SET NODE_ENV=development & nodemon server.js",
-    "build-w": "SET NODE_ENV=production & webpack -p"   
+    "build-w": "SET NODE_ENV=production & webpack -p"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
@@ -44,9 +42,11 @@
   },
   "dependencies": {
     "express": "^4.15.3",
+    "material-ui": "^0.18.1",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "react-router-dom": "^4.1.1"
+    "react-router-dom": "^4.1.1",
+    "react-tap-event-plugin": "^2.0.1"
   }
 }
