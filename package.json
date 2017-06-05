@@ -11,7 +11,13 @@
     "front-dev-init": "NODE_ENV=development nodemon server.js",
     "front-dev": "NODE_ENV=development webpack-dev-server",
     "back-dev": "webpack -p && NODE_ENV=development nodemon server.js",
-    "build": "NODE_ENV=production webpack -p"
+    "build": "NODE_ENV=production webpack -p",
+
+   
+    "server": "SET NODE_ENV=development & nodemon server.js",
+    "start": "SET NODE_ENV=development & node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "bundle-server": "webpack -p && NODE_ENV=development nodemon server.js",
+    "build-w": "SET NODE_ENV=production & webpack -p"   
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
