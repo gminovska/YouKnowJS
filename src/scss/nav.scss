@@ -1,4 +1,6 @@
-.navbar {
-  margin-top: 30px;
-  margin-left: 30px;
+.navButtons {
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
 }

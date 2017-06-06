@@ -15,33 +15,23 @@ import Quizzes from './Quizzes';
 injectTapEventPlugin();
 
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      userLoggedIn: false,
-      username: '',
-    };
-  }
-
-  render() {
-    return (
-      <MuiThemeProvider>
+const App = () => (
+  <MuiThemeProvider>
+    <div>
+      <Router>
         <div>
-          <Router>
-            <div>
-              <Nav />
-              <Switch>
-                <Route exact path="/" component={LandingPage} />
-                <Route path="/halloffame" component={HallOfFame} />
-                <Route path="/quizzes" component={Quizzes} />
-              </Switch>
-            </div>
-          </Router>
+          <Nav />
+          <Switch>
+            <Route exact path="/" component={LandingPage} />
+            <Route path="/halloffame" component={HallOfFame} />
+            <Route path="/quizzes" component={Quizzes} />
+          </Switch>
         </div>
-      </MuiThemeProvider>
-    );
-  }
-}
+      </Router>
+    </div>
+  </MuiThemeProvider>
+);
+
 
 export default App;
+

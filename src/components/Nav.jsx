@@ -1,65 +1,155 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
+import AppBar from 'material-ui/AppBar';
+
+const UserNavButtons = ({ username, logout }) => (
+  <div className="navButtons">
+    <div className="welcomeMsg">Hello, {username}!</div>
+    <Link to="/halloffame"><FlatButton label="Hall of Fame" /></Link>
+    <FlatButton label="Logout" onTouchTap={logout} />
+  </div>
+);
+
+
+UserNavButtons.propTypes = {
+  username: PropTypes.string.isRequired,
+  logout: PropTypes.func.isRequired,
+};
+
+const GuestNavButtons = ({ showLoginForm, showSignupForm }) => (
+  <div className="navButtons">
+    <div className="welcomeMsg">Hello, stranger!</div>
+    <Link to="/halloffame"><FlatButton label="Hall of Fame" /></Link>
+    <FlatButton label="Log in" onTouchTap={showLoginForm} />
+    <FlatButton label="Sign up" onTouchTap={showSignupForm} />
+  </div>
+);
+
+GuestNavButtons.propTypes = {
+  showLoginForm: PropTypes.func.isRequired,
+  showSignupForm: PropTypes.func.isRequired,
+};
+
 
 class Nav extends React.Component {
   constructor() {
     super();
     this.state = {
-      open: false,
+      logged: false,
+      username: undefined,
+      loginDialogOpen: false,
+      signupDialogOpen: false,
+      logoutDialogOpen: false,
     };
-
-    this.handleOpen = this.handleOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
   }
 
-  handleOpen() {
-    this.setState({ open: true });
+  handleLogout = () => {
+    this.setState({ logged: false, username: undefined, logoutDialogOpen: true });
   }
 
-  handleClose() {
-    this.setState({ open: false });
+  closeLogoutDialog = () => {
+    this.setState({ logoutDialogOpen: false });
+  }
+
+  openLoginDialog = () => {
+    this.setState({ loginDialogOpen: true });
+  }
+
+  closeLoginDialog = () => {
+    this.setState({ loginDialogOpen: false });
+  }
+
+  openSignupDialog = () => {
+    this.setState({ signupDialogOpen: true });
+  }
+
+  closeSignupDialog = () => {
+    this.setState({ signupDialogOpen: false });
   }
 
   render() {
-    const actions = [
+    const logoutActions = [
       <FlatButton
-        label="Cancel"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />,
-      <FlatButton
-        label="Submit"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={this.handleClose}
+        label="OK"
+        primary
+        keyboardFocused
+        onTouchTap={this.closeLogoutDialog}
       />,
     ];
 
+    const loginActions = [
+      <FlatButton
+        label="Cancel"
+        primary
+        onTouchTap={this.closeLoginDialog}
+      />,
+      <FlatButton
+        label="Submit"
+        primary
+        keyboardFocused
+        onTouchTap={this.closeLoginDialog}
+      />,
+    ];
+
+    const signupActions = [
+      <FlatButton
+        label="Cancel"
+        primary
+        onTouchTap={this.closeSignupDialog}
+      />,
+      <FlatButton
+        label="Submit"
+        primary
+        keyboardFocused
+        onTouchTap={this.closeSignupDialog}
+      />,
+    ];
 
     return (
-      <div className="navbar">
-        <NavLink exact activeClassName="activeLink" to="/">
-          <RaisedButton label="Home" />
-        </NavLink>
-        <RaisedButton label="Login" onTouchTap={this.handleOpen} />
+      <div>
+        <AppBar
+          title="YouKnowJS"
+          showMenuIconButton={false}
+          iconElementRight={this.state.logged
+                              ? <UserNavButtons
+                                username={this.state.username}
+                                logout={this.handleLogout}
+                              />
+                              : <GuestNavButtons
+                                showLoginForm={this.openLoginDialog}
+                                showSignupForm={this.openSignupDialog}
+                              />}
+        />
         <Dialog
-          title="Log in!"
-          actions={actions}
+          title="Logged out"
+          actions={logoutActions}
           modal={false}
-          open={this.state.open}
-          onRequestClose={this.handleClose}
+          open={this.state.logoutDialogOpen}
+          onRequestClose={this.closeLogoutDialog}
         >
-          There should be a login form here
+          You have been logged out.
         </Dialog>
-        <NavLink activeClassName="activeLink" to="/halloffame">
-          <RaisedButton label="Swag" />
-        </NavLink>
-        <NavLink activeClassName="activeLink" to="/quizzes">
-          <RaisedButton label="Quizzes" />
-        </NavLink>
+        <Dialog
+          title="Log in"
+          actions={loginActions}
+          modal={false}
+          open={this.state.loginDialogOpen}
+          onRequestClose={this.closeLoginDialog}
+        >
+          This is a login form
+        </Dialog>
+        <Dialog
+          title="Sign up"
+          actions={signupActions}
+          modal={false}
+          open={this.state.signupDialogOpen}
+          onRequestClose={this.closeSignupDialog}
+        >
+          This is a signup form
+        </Dialog>
       </div>
     );
   }
