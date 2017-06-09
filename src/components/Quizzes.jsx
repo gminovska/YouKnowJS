@@ -1,10 +1,8 @@
 import React from 'react';
+import QuizGrid from './QuizGrid';
 
 
 
-const QuizGrid = () => (
-  <p>Quiz grid component</p>
-);
 
 const Loader = () => (
   <p>Loading...</p>
@@ -19,16 +17,19 @@ class Quizzes extends React.Component {
     }
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     fetch('/api/allquizzes')
       .then( (response) => response.json())
-      .then( this.setState({ quizData: response.data }))
+      .then( (response) => {this.setState({
+          quizData: response.data
+      })
+    })
   }
 
   render() {
     return (
       <div>
-      {this.state.quizData ? <QuizGrid /> : <Loader />}
+      {this.state.quizData ? <QuizGrid quizzes={this.state.quizData}/> : <Loader />}
       </div>
     )
   }

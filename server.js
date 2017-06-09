@@ -15,9 +15,11 @@ app.use(express.static(path.join(__dirname, 'build')));
 var quizzes = {
   data: [
     {
+      id: 1,
       name: "Scope & Closures"
     },
     {
+      id: 2,
       name: "Up & Going"
     }
   ]
