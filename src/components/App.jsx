@@ -1,7 +1,7 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {yellow500, darkBlack} from 'material-ui/styles/colors';
+import { yellow500, darkBlack } from 'material-ui/styles/colors';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {
   BrowserRouter as Router,
@@ -21,8 +21,8 @@ const muiTheme = getMuiTheme({
     primary1Color: yellow500,
     textColor: darkBlack,
   },
-  appBar: { 
-    textColor: darkBlack
+  appBar: {
+    textColor: darkBlack,
   },
 });
 
@@ -34,8 +34,9 @@ const App = () => (
           <Nav />
           <Switch>
             <Route exact path="/" component={LandingPage} />
-            <Route path="/halloffame" component={HallOfFame} />
+            <Route exact path="/halloffame" component={HallOfFame} />
             <Route path="/quizzes" component={Quizzes} />
+            <Route render={() => (<p>404 - Not found </p>)} />
           </Switch>
         </div>
       </Router>
