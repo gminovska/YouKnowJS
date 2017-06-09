@@ -12,8 +12,18 @@ app.use(express.static(path.join(__dirname, 'build')));
  * All request handlers should originate from '/api' path
  */
 
-app.get('/api/q1', (req, res) => {
-  res.json({ q: 'Something something' });
+var quizzes = {
+  data: [
+    {
+      name: "Scope & Closures"
+    },
+    {
+      name: "Up & Going"
+    }
+  ]
+}
+app.get('/api/allquizzes', (req, res) => {
+  res.json(quizzes);
 });
 
 
