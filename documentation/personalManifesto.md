@@ -32,4 +32,4 @@ There are two main areas in which we want to improve.
 
 Learning is our primary goal, more important then the app itself. That being
 said, delivering a complete product is the apogee of the development process
-and thus is a vital part of the whole learning endavour. 
+and thus is a vital part of the whole learning endeavour. 
