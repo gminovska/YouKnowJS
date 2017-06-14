@@ -9,7 +9,7 @@ const QuizGrid = ({quizzes}) => {
             <div key={quiz._id}>  
               <h1 >{quiz.name}</h1>
               <Link to={{
-                pathname: `/quizpage/${quiz._id}`,
+                pathname: `/quizzes/${quiz._id}`,
               }}>Link</Link>
             </div>
         ))}

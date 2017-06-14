@@ -10,15 +10,16 @@ class Quiz extends React.Component {
 
   componentDidMount() {
 
+// TODO: Refactor so we don't use match
     const match =  matchPath(this.props.location.pathname, {
-      path: "/quizpage/:id",
+      path: "/quizzes/:id",
       exact: true,
       strict: false
     });
 
     let url = "/api" + match.url;
 
-    console.log(url);
+    console.log(this.props.match);
   }
 
   render() {
