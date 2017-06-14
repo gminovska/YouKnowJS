@@ -1,7 +1,7 @@
 import React from 'react';
 import QuizGrid from './QuizGrid';
 
-
+import Quiz from './Quiz.jsx';
 
 
 const Loader = () => (
@@ -19,7 +19,11 @@ class Quizzes extends React.Component {
 
   componentDidMount() {
     fetch('/api/allquizzes')
-      .then( (response) => response.json())
+      .then( (response) =>{ 
+        let data = response.json();
+        console.log(data);
+        return data;
+      })
       .then( (response) => {this.setState({
           quizData: response
       })
