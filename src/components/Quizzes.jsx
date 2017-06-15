@@ -18,7 +18,7 @@ class Quizzes extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/allquizzes')
+    fetch('/api/quizzes')
       .then( (response) =>{ 
         let data = response.json();
         console.log(data);

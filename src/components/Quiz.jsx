@@ -1,36 +1,75 @@
 import React from 'react';
 import { matchPath } from 'react-router'
 
+import CircularProgress from 'material-ui/CircularProgress';
+import Question from './Question.jsx';
+import Result from './Result.jsx';
+
 
 class Quiz extends React.Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     
+    this.state = {
+      quizName: undefined,
+      quizQuestions: undefined,
+      quizIndex: 0,
+      quizQuestionsNumber: undefined,
+      lastQuestion: false,
+      displayResult: false
+    }
   }
 
   componentDidMount() {
+    const url = `/api/quizzes/${this.props.match.params.id}`;
 
-// TODO: Refactor so we don't use match
-    const match =  matchPath(this.props.location.pathname, {
-      path: "/quizzes/:id",
-      exact: true,
-      strict: false
-    });
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState({
+          quizName: data.name,
+          quizQuestions: data.questions,
+          quizQuestionsNumber: data.questions.length
+        });
+      });
+  }
 
-    let url = "/api" + match.url;
+  nextQuestion = () => {
+    if(this.state.quizIndex === this.state.quizQuestionsNumber - 1) {
+      this.setState(
+        () => ({ lastQuestion: true })
+      )
+    }
+    else {
+      this.setState((prevState) => ({
+      quizIndex: ++prevState.quizIndex
+    }));
+    }
+  }
 
-    console.log(this.props.match);
+  calculateScore = () => {
+    this.setState(
+      () => ({ displayResult: true })
+    )
   }
 
   render() {
-    return (
-      <div> 
-        <p>This is Quiz Component!</p>
+    if(this.state.displayResult) {
+      render (
+        <Result />
+      )
+    }
+    else {
+      return (
+      <div>
+        {this.state.quizName 
+          ? <Question text={ this.state.quizQuestions[this.state.quizIndex].question} submitHandler={this.nextQuestion} last={this.state.lastQuestion} handleLast={this.calculateScore} /> 
+          : <CircularProgress size={80} thickness={5} />}
       </div>
     );
+    }
   }
 }
 
 
 export default Quiz;
-
