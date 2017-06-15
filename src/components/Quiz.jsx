@@ -2,8 +2,10 @@ import React from 'react';
 import { matchPath } from 'react-router'
 
 import CircularProgress from 'material-ui/CircularProgress';
-import Question from './Question.jsx';
-import Result from './Result.jsx';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
+import Question from './Question';
+import Result from './Result';
 
 
 class Quiz extends React.Component {
@@ -16,7 +18,8 @@ class Quiz extends React.Component {
       quizIndex: 0,
       quizQuestionsNumber: undefined,
       lastQuestion: false,
-      displayResult: false
+      displayResult: false,
+      dialogOpen: false
     }
   }
 
@@ -53,9 +56,41 @@ class Quiz extends React.Component {
     )
   }
 
+  openDialog = () => {
+    this.setState(
+      () => ({ dialogOpen: true })
+    );
+  }
+
+  closeDialog = () => {
+    this.setState(
+      () => ({ dialogOpen: false })
+    );
+  }
+
   render() {
+
+    const actions = [
+      <FlatButton
+        label="Next"
+        primary
+        onTouchTap={() => {
+          this.closeDialog();
+          this.nextQuestion();
+        }}
+      />,
+      <FlatButton
+        label="See Results"
+        primary
+        onTouchTap={() => {
+          this.closeDialog();
+          this.calculateScore();
+        }}
+      />
+    ];
+
     if(this.state.displayResult) {
-      render (
+      return (
         <Result />
       )
     }
@@ -63,8 +98,18 @@ class Quiz extends React.Component {
       return (
       <div>
         {this.state.quizName 
-          ? <Question text={ this.state.quizQuestions[this.state.quizIndex].question} submitHandler={this.nextQuestion} last={this.state.lastQuestion} handleLast={this.calculateScore} /> 
+          ? <Question text={ this.state.quizQuestions[this.state.quizIndex].question} submitAnswer={this.openDialog} /> 
           : <CircularProgress size={80} thickness={5} />}
+
+          <Dialog
+          title="Explanation"
+          actions={this.state.lastQuestion ? actions[1] : actions[0]}
+          modal
+          open={this.state.dialogOpen}
+        >
+          This is the explanation
+        </Dialog>
+
       </div>
     );
     }
