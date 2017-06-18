@@ -13,13 +13,15 @@ class Quiz extends React.Component {
     super(props);
     
     this.state = {
+      score: 0,
       quizName: undefined,
       quizQuestions: undefined,
       quizIndex: 0,
       quizQuestionsNumber: undefined,
       lastQuestion: false,
       displayResult: false,
-      dialogOpen: false
+      dialogOpen: false,
+      currentAnswer: undefined
     }
   }
 
@@ -29,6 +31,7 @@ class Quiz extends React.Component {
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         this.setState({
           quizName: data.name,
           quizQuestions: data.questions,
@@ -37,26 +40,37 @@ class Quiz extends React.Component {
       });
   }
 
+  incrementScore = () => {
+    this.setState(
+      prevState => ({ score: ++prevState.score })
+    )
+  }
+
+  incrementIndex = () => {
+    if (this.state.quizIndex < this.state.quizQuestionsNumber) {
+        this.setState((prevState) => ({
+        quizIndex: ++prevState.quizIndex
+      }));
+    }
+  }
+
   nextQuestion = () => {
-    if(this.state.quizIndex === this.state.quizQuestionsNumber - 1) {
+    if(this.state.quizIndex === this.state.quizQuestionsNumber - 2) {
       this.setState(
         () => ({ lastQuestion: true })
       )
     }
-    else {
-      this.setState((prevState) => ({
-      quizIndex: ++prevState.quizIndex
-    }));
-    }
+    this.incrementIndex();
   }
 
-  calculateScore = () => {
+  displayScore = () => {
     this.setState(
       () => ({ displayResult: true })
     )
   }
 
   openDialog = () => {
+    if(this.state.currentAnswer) this.incrementScore();
     this.setState(
       () => ({ dialogOpen: true })
     );
@@ -67,6 +81,11 @@ class Quiz extends React.Component {
       () => ({ dialogOpen: false })
     );
   }
+
+  isAnswerCorrect = (bool) => {
+    this.setState(
+      () => ({ currentAnswer: bool })
+    )}
 
   render() {
 
@@ -84,30 +103,36 @@ class Quiz extends React.Component {
         primary
         onTouchTap={() => {
           this.closeDialog();
-          this.calculateScore();
+          this.displayScore();
         }}
       />
     ];
 
     if(this.state.displayResult) {
       return (
-        <Result />
+        <Result score={this.state.score}
+                total={this.state.quizQuestionsNumber} />
       )
     }
     else {
       return (
       <div>
         {this.state.quizName 
-          ? <Question text={ this.state.quizQuestions[this.state.quizIndex].question} submitAnswer={this.openDialog} /> 
+          ? <Question 
+              text={this.state.quizQuestions[this.state.quizIndex].question} submitAnswer={this.openDialog}
+              answers ={this.state.quizQuestions[this.state.quizIndex].answers}
+              checkAnswer={this.isAnswerCorrect} /> 
           : <CircularProgress size={80} thickness={5} />}
 
           <Dialog
-          title="Explanation"
+          title={this.state.currentAnswer ? "Correct!" : "Incorrect! :("}
           actions={this.state.lastQuestion ? actions[1] : actions[0]}
           modal
           open={this.state.dialogOpen}
         >
-          This is the explanation
+          {this.state.quizQuestions
+            ? this.state.quizQuestions[this.state.quizIndex].explanation
+            : null}
         </Dialog>
 
       </div>

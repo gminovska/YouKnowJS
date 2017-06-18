@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Result = ({ props }) => {
+const Result = ({ score, total }) => {
 
   return (
     <div>
-      Ima result!
+      You have answered {score}/{total} questions. Wohooo!
     </div>
   );
 };
