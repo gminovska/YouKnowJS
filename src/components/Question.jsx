@@ -29,6 +29,9 @@ const Question = ({ text, submitAnswer, answers, checkAnswer }) => {
 
 Question.propTypes = {
   text: PropTypes.string.isRequired,
+  submitAnswer: PropTypes.func.isRequired,
+  answers: PropTypes.array.isRequired,
+  checkAnswer: PropTypes.func.isRequired
 };
 
 export default Question;

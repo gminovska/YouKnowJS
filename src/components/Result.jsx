@@ -10,12 +10,9 @@ const Result = ({ score, total }) => {
   );
 };
 
-Result.defaultProps = {
-  
-};
-
 Result.propTypes = {
-  
+  score: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired
 };
 
 export default Result;

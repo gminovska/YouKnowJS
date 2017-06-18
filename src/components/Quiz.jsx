@@ -118,21 +118,25 @@ class Quiz extends React.Component {
       return (
       <div>
         {this.state.quizName 
+
           ? <Question 
               text={this.state.quizQuestions[this.state.quizIndex].question} submitAnswer={this.openDialog}
               answers ={this.state.quizQuestions[this.state.quizIndex].answers}
               checkAnswer={this.isAnswerCorrect} /> 
+
           : <CircularProgress size={80} thickness={5} />}
+
 
           <Dialog
           title={this.state.currentAnswer ? "Correct!" : "Incorrect! :("}
           actions={this.state.lastQuestion ? actions[1] : actions[0]}
           modal
-          open={this.state.dialogOpen}
-        >
-          {this.state.quizQuestions
-            ? this.state.quizQuestions[this.state.quizIndex].explanation
-            : null}
+          open={this.state.dialogOpen} >
+
+            {this.state.quizQuestions
+              ? this.state.quizQuestions[this.state.quizIndex].explanation
+              : null}
+
         </Dialog>
 
       </div>
