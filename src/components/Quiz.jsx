@@ -21,7 +21,8 @@ class Quiz extends React.Component {
       lastQuestion: false,
       displayResult: false,
       dialogOpen: false,
-      currentAnswer: undefined
+      currentAnswer: undefined,
+      noAnswerWarning: false
     }
   }
 
@@ -70,15 +71,25 @@ class Quiz extends React.Component {
   }
 
   openDialog = () => {
-    if(this.state.currentAnswer) this.incrementScore();
-    this.setState(
-      () => ({ dialogOpen: true })
-    );
+    if(this.state.currentAnswer !== null) {
+      document.getElementById('answers-form').reset();
+      if(this.state.currentAnswer) this.incrementScore();
+      this.setState(
+        () => ({ dialogOpen: true,
+                 noAnswerWarning: false 
+                })
+      );
+    }
+    else {
+      this.setState(
+        () => ({ noAnswerWarning: true })
+      )
+    }
   }
 
   closeDialog = () => {
     this.setState(
-      () => ({ dialogOpen: false })
+      () => ({ dialogOpen: false, currentAnswer: null })
     );
   }
 
@@ -122,7 +133,8 @@ class Quiz extends React.Component {
           ? <Question 
               text={this.state.quizQuestions[this.state.quizIndex].question} submitAnswer={this.openDialog}
               answers ={this.state.quizQuestions[this.state.quizIndex].answers}
-              checkAnswer={this.isAnswerCorrect} /> 
+              checkAnswer={this.isAnswerCorrect}
+              warning={this.state.noAnswerWarning} /> 
 
           : <CircularProgress size={80} thickness={5} />}
 
