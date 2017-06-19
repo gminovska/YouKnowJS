@@ -11,18 +11,16 @@ const Answers = ({answers, checkAnswer, type}) => {
 
     const handleMultiChoice = (e) => {
         
-        var result = Array
+        const result = Array
             .from(document.getElementById("answers-form").querySelectorAll("input"))
-            .every((current) =>{
-                if(current.value && current.checked) {
-                    return true;
-                } else if(!current.value && !current.checked) {
-                    return true;
-                }   
+            .every(current => {
+                  if(current.value === "true" && current.checked) return true
+                  if(current.value === "false" && !current.checked) return true;
+
+                  return false;
             })
                
             
-        console.log(result);
         checkAnswer(result);
     }
     return (
@@ -61,7 +59,6 @@ const Question = ({
     warning,
     type
 }) => {
-    console.log(type);
     return (
         <Paper zDepth={2}>
             <h2>{text}</h2>
