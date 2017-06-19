@@ -3,43 +3,81 @@ import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 
-const Question = ({ text, submitAnswer, answers, checkAnswer, warning }) => {
-  let i = 0;
-  return (
-    <div>
-      <Paper zDepth={2}>
-        {text}
+const Answers = ({answers, checkAnswer, type}) => {
+    let i = 0;
+    const handleSingleChoice = (e) => e.target.value === "true"
+        ? checkAnswer(true)
+        : checkAnswer(false);
+
+    const handleMultiChoice = (e) => {
+        
+        var result = Array
+            .from(document.getElementById("answers-form").querySelectorAll("input"))
+            .every((current) =>{
+                if(current.value && current.checked) {
+                    return true;
+                } else if(!current.value && !current.checked) {
+                    return true;
+                }   
+            })
+               
+            
+        console.log(result);
+        checkAnswer(result);
+    }
+    return (
         <form id="answers-form">
-        {answers.map(answer => {
-          return (
-            <div key={i++}>
-              <input name="answers" 
-                     type="radio" 
-                     value={answer.correct}
-                     id={answer.text}
-                     onClick={ (e) => 
-                      e.target.value === "true"
-                        ? checkAnswer(true)
-                        : checkAnswer(false) }/>
-              <label htmlFor={answer.text}>{answer.text}</label>
-            </div>
-          )
-        })}
+            {answers.map(answer => {
+                return (
+                    <div key={i++}>
+                        <label>{answer.text}
+                            <input
+                                name="answers"
+                                type={type === 'regular'
+                                ? 'radio'
+                                : 'checkbox'}
+                                value={answer.correct}
+                                id={answer.text}
+                                onClick={(e) => {
+                                if (type === 'regular') {
+                                    handleSingleChoice(e)
+                                } else {
+                                    handleMultiChoice(e)
+                                }
+                            }}/>
+                        </label>
+                    </div>
+                )
+            })}
         </form>
-        { warning 
-          ? <p className="warning">You need to select an answer!</p>
-          : null }
-      </Paper>
-      <RaisedButton label="Submit answer" onTouchTap={submitAnswer} />
-    </div>
-  );
+    )
+};
+
+const Question = ({
+    text,
+    submitAnswer,
+    answers,
+    checkAnswer,
+    warning,
+    type
+}) => {
+    console.log(type);
+    return (
+        <Paper zDepth={2}>
+            <h2>{text}</h2>
+            <Answers answers={answers} checkAnswer={checkAnswer} type={type}/> {warning
+                ? <p className="warning">You need to select an answer!</p>
+                : null}
+            <RaisedButton label="Submit answer" onTouchTap={submitAnswer}/>
+        </Paper>
+    );
 };
 
 Question.propTypes = {
-  text: PropTypes.string.isRequired,
-  submitAnswer: PropTypes.func.isRequired,
-  answers: PropTypes.array.isRequired,
-  checkAnswer: PropTypes.func.isRequired
+    text: PropTypes.string.isRequired,
+    submitAnswer: PropTypes.func.isRequired,
+    answers: PropTypes.array.isRequired,
+    checkAnswer: PropTypes.func.isRequired
 };
 
 export default Question;

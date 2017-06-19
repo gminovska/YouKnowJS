@@ -21,7 +21,7 @@ class Quiz extends React.Component {
       lastQuestion: false,
       displayResult: false,
       dialogOpen: false,
-      currentAnswer: undefined,
+      currentAnswer: null,
       noAnswerWarning: false
     }
   }
@@ -134,7 +134,8 @@ class Quiz extends React.Component {
               text={this.state.quizQuestions[this.state.quizIndex].question} submitAnswer={this.openDialog}
               answers ={this.state.quizQuestions[this.state.quizIndex].answers}
               checkAnswer={this.isAnswerCorrect}
-              warning={this.state.noAnswerWarning} /> 
+              warning={this.state.noAnswerWarning}
+              type={this.state.quizQuestions[this.state.quizIndex].type} /> 
 
           : <CircularProgress size={80} thickness={5} />}
 
