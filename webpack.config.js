@@ -74,5 +74,6 @@ module.exports = {
     new webpack.NamedModulesPlugin(),
   ] :
   [HTMLWebpackPluginConfig, DefinePluginConfig, UglifyJsPluginConfig],
+  //TODO Fix how source maps are incorporated in the config
   devtool: 'inline-source-map'
 };

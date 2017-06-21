@@ -1,17 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const QuizGrid = ({quizzes}) => {
-
-    const displayQuiz = (quizzes) => (
-        quizzes.map((quiz) =>{
-            <h1>{quiz.name}</h1>
-        })
-    )
 
     return (
         <div>
             {quizzes.map((quiz) => (
-            <h1 key={quiz.id}>{quiz.name}</h1>
+            <div key={quiz._id}>  
+              <h1 >{quiz.name}</h1>
+              <Link to={{
+                pathname: `/quizzes/${quiz._id}`,
+              }}>Link</Link>
+            </div>
         ))}
         </div>
     );
