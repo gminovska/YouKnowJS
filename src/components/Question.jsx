@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 
-const Answers = ({answers, correctAnswer, checkAnswer, type}) => {
+const Answers = ({answers, type}) => {
     
             
     return (
@@ -13,18 +13,16 @@ const Answers = ({answers, correctAnswer, checkAnswer, type}) => {
                     <div key={answer._id}>
                         <label>{answer.text}
                             <input
+                                className="answerBox"
                                 name="answers"
                                 type={type === 'regular'
                                 ? 'radio'
                                 : 'checkbox'}
-                                value={answer.correct}
-                                id={answer.text}
+                                value={answer._id}
                             />
                         </label>
                     </div>
                   )})}
-                )
-            })}
         </form>
     )
 };
@@ -32,8 +30,6 @@ const Answers = ({answers, correctAnswer, checkAnswer, type}) => {
 
 Answers.PropTypes = {
   answers: PropTypes.array.isRequired,
-  checkAnswer: PropTypes.func.isRequired,
-  correctAnswer: PropTypes.array.isRequired,
   type: PropTypes.string.isRequired
 }
 
@@ -42,8 +38,7 @@ const Question = ({
     text,
     submitAnswer,
     answers,
-    correctAnswer,
-    checkAnswer,
+    verifyAnswer,
     warning,
     type
 }) => {
@@ -51,13 +46,13 @@ const Question = ({
         <Paper zDepth={2}>
             <h2>{text}</h2>
             <Answers answers={answers} 
-                     checkAnswer={checkAnswer} 
-                     type={type} 
-                     correctAnswer={correctAnswer} /> 
+                     type={type}  /> 
             {warning
                 ? <p className="warning">You need to select an answer!</p>
                 : null}
-            <RaisedButton label="Submit answer" onTouchTap={submitAnswer}/>
+            <RaisedButton label="Submit answer" onTouchTap={() => {
+              verifyAnswer().then(submitAnswer)
+              }} />
         </Paper>
     );
 };
@@ -66,8 +61,7 @@ Question.propTypes = {
     text: PropTypes.string.isRequired,
     submitAnswer: PropTypes.func.isRequired,
     answers: PropTypes.array.isRequired,
-    checkAnswer: PropTypes.func.isRequired,
-    correctAnswer: PropTypes.array.isRequired,
+    verifyAnswer: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
     warning: PropTypes.bool.isRequired
 };

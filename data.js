@@ -87,6 +87,7 @@ var quizzes = [{
                     "text" : "Magic"
                 }
             ],
+            "correctAnswer":[2],
             "explanation" : "When comparing the string ‘99.99’ to the number 99.99, most people would agree they are equivalent. But they're not exactly the same. It's the same value in two different representations, two different types. You could say they're \"loosely equal,\" couldn't you?\n To help you out in these common situations, JavaScript will sometimes kick in and implicitly coerce values to the matching types.\n While designed to help you, implicit coercion can create confusion if you haven't taken the time to learn the rules that govern its behavior. Most JS developers never have, so the common feeling is that implicit coercion is confusing and harms programs with unexpected bugs, and should thus be avoided. It's even sometimes called a flaw in the design of the language.",
             "source" : "https://github.com/getify/You-Dont-Know-JS/blob/master/up%20%26%20going/ch1.md#converting-between-types"
         }, 

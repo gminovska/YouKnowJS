@@ -68,22 +68,23 @@ class Quiz extends React.Component {
     )
   }
 
-  openDialog = () => {
+  openDialog = () => new Promise(resolve => {
     if(this.state.currentAnswer !== null) {
       document.getElementById('answers-form').reset();
       if(this.state.currentAnswer) this.incrementScore();
       this.setState(
         () => ({ dialogOpen: true,
                  noAnswerWarning: false 
-                })
+                }), resolve
       );
     }
     else {
       this.setState(
-        () => ({ noAnswerWarning: true })
-      )
+        () => ({ noAnswerWarning: true }), resolve
+      );
     }
-  }
+  })
+  
 
   closeDialog = () => {
     this.setState(
@@ -91,10 +92,27 @@ class Quiz extends React.Component {
     );
   }
 
-  isAnswerCorrect = (bool) => {
-    this.setState(
-      () => ({ currentAnswer: bool })
-    )}
+  verifyAnswer = () => new Promise(resolve => {
+
+    const correctAnswers = this.state.quizQuestions[this.state.quizIndex].correctAnswer
+    const userAnswers = Array.from(document.querySelectorAll('.answerBox'))
+      .filter(item => item.checked)
+      .map(item => Number(item.value));
+
+    if(userAnswers.length === correctAnswers.length) {
+      for(const answer of userAnswers) {
+        if(!correctAnswers.includes(answer)) {
+          this.setState(()=> ({ currentAnswer: false }), resolve)
+          return;
+        }
+      }
+      this.setState(()=> ({ currentAnswer: true }), resolve)
+    }
+    else {
+      this.setState(() => ({ currentAnswer: false }), resolve)
+    }
+  })
+  
 
   render() {
 
@@ -132,7 +150,7 @@ class Quiz extends React.Component {
               text={this.state.quizQuestions[this.state.quizIndex].text} submitAnswer={this.openDialog}
               answers ={this.state.quizQuestions[this.state.quizIndex].answers}
               correctAnswer={this.state.quizQuestions[this.state.quizIndex].correctAnswer}
-              checkAnswer={this.isAnswerCorrect}
+              verifyAnswer={this.verifyAnswer}
               warning={this.state.noAnswerWarning}
               type={this.state.quizQuestions[this.state.quizIndex].questionType} /> 
 
