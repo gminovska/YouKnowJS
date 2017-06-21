@@ -14,7 +14,6 @@ class Quiz extends React.Component {
     
     this.state = {
       score: 0,
-      quizName: undefined,
       quizQuestions: undefined,
       quizIndex: 0,
       quizQuestionsNumber: undefined,
@@ -34,7 +33,6 @@ class Quiz extends React.Component {
       .then((data) => {
         console.log(data);
         this.setState({
-          quizName: data.name,
           quizQuestions: data.questions,
           quizQuestionsNumber: data.questions.length
         });
@@ -70,22 +68,23 @@ class Quiz extends React.Component {
     )
   }
 
-  openDialog = () => {
+  openDialog = () => new Promise(resolve => {
     if(this.state.currentAnswer !== null) {
       document.getElementById('answers-form').reset();
       if(this.state.currentAnswer) this.incrementScore();
       this.setState(
         () => ({ dialogOpen: true,
                  noAnswerWarning: false 
-                })
+                }), resolve
       );
     }
     else {
       this.setState(
-        () => ({ noAnswerWarning: true })
-      )
+        () => ({ noAnswerWarning: true }), resolve
+      );
     }
-  }
+  })
+  
 
   closeDialog = () => {
     this.setState(
@@ -93,10 +92,27 @@ class Quiz extends React.Component {
     );
   }
 
-  isAnswerCorrect = (bool) => {
-    this.setState(
-      () => ({ currentAnswer: bool })
-    )}
+  verifyAnswer = () => new Promise(resolve => {
+
+    const correctAnswers = this.state.quizQuestions[this.state.quizIndex].correctAnswer
+    const userAnswers = Array.from(document.querySelectorAll('.answerBox'))
+      .filter(item => item.checked)
+      .map(item => Number(item.value));
+
+    if(userAnswers.length === correctAnswers.length) {
+      for(const answer of userAnswers) {
+        if(!correctAnswers.includes(answer)) {
+          this.setState(()=> ({ currentAnswer: false }), resolve)
+          return;
+        }
+      }
+      this.setState(()=> ({ currentAnswer: true }), resolve)
+    }
+    else {
+      this.setState(() => ({ currentAnswer: false }), resolve)
+    }
+  })
+  
 
   render() {
 
@@ -128,14 +144,15 @@ class Quiz extends React.Component {
     else {
       return (
       <div>
-        {this.state.quizName 
+        {this.state.quizQuestions 
 
           ? <Question 
-              text={this.state.quizQuestions[this.state.quizIndex].question} submitAnswer={this.openDialog}
+              text={this.state.quizQuestions[this.state.quizIndex].text} submitAnswer={this.openDialog}
               answers ={this.state.quizQuestions[this.state.quizIndex].answers}
-              checkAnswer={this.isAnswerCorrect}
+              correctAnswer={this.state.quizQuestions[this.state.quizIndex].correctAnswer}
+              verifyAnswer={this.verifyAnswer}
               warning={this.state.noAnswerWarning}
-              type={this.state.quizQuestions[this.state.quizIndex].type} /> 
+              type={this.state.quizQuestions[this.state.quizIndex].questionType} /> 
 
           : <CircularProgress size={80} thickness={5} />}
 
