@@ -3,31 +3,14 @@ import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 
-const Answers = ({answers, checkAnswer, type}) => {
-    let i = 0;
-    const handleSingleChoice = (e) => e.target.value === "true"
-        ? checkAnswer(true)
-        : checkAnswer(false);
-
-    const handleMultiChoice = (e) => {
-        
-        const result = Array
-            .from(document.getElementById("answers-form").querySelectorAll("input"))
-            .every(current => {
-                  if(current.value === "true" && current.checked) return true
-                  if(current.value === "false" && !current.checked) return true;
-
-                  return false;
-            })
-               
+const Answers = ({answers, correctAnswer, checkAnswer, type}) => {
+    
             
-        checkAnswer(result);
-    }
     return (
         <form id="answers-form">
             {answers.map(answer => {
                 return (
-                    <div key={i++}>
+                    <div key={answer._id}>
                         <label>{answer.text}
                             <input
                                 name="answers"
@@ -36,25 +19,30 @@ const Answers = ({answers, checkAnswer, type}) => {
                                 : 'checkbox'}
                                 value={answer.correct}
                                 id={answer.text}
-                                onClick={(e) => {
-                                if (type === 'regular') {
-                                    handleSingleChoice(e)
-                                } else {
-                                    handleMultiChoice(e)
-                                }
-                            }}/>
+                            />
                         </label>
                     </div>
+                  )})}
                 )
             })}
         </form>
     )
 };
 
+
+Answers.PropTypes = {
+  answers: PropTypes.array.isRequired,
+  checkAnswer: PropTypes.func.isRequired,
+  correctAnswer: PropTypes.array.isRequired,
+  type: PropTypes.string.isRequired
+}
+
+
 const Question = ({
     text,
     submitAnswer,
     answers,
+    correctAnswer,
     checkAnswer,
     warning,
     type
@@ -62,7 +50,11 @@ const Question = ({
     return (
         <Paper zDepth={2}>
             <h2>{text}</h2>
-            <Answers answers={answers} checkAnswer={checkAnswer} type={type}/> {warning
+            <Answers answers={answers} 
+                     checkAnswer={checkAnswer} 
+                     type={type} 
+                     correctAnswer={correctAnswer} /> 
+            {warning
                 ? <p className="warning">You need to select an answer!</p>
                 : null}
             <RaisedButton label="Submit answer" onTouchTap={submitAnswer}/>
@@ -74,7 +66,10 @@ Question.propTypes = {
     text: PropTypes.string.isRequired,
     submitAnswer: PropTypes.func.isRequired,
     answers: PropTypes.array.isRequired,
-    checkAnswer: PropTypes.func.isRequired
+    checkAnswer: PropTypes.func.isRequired,
+    correctAnswer: PropTypes.array.isRequired,
+    type: PropTypes.string.isRequired,
+    warning: PropTypes.bool.isRequired
 };
 
 export default Question;

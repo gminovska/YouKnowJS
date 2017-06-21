@@ -14,7 +14,6 @@ class Quiz extends React.Component {
     
     this.state = {
       score: 0,
-      quizName: undefined,
       quizQuestions: undefined,
       quizIndex: 0,
       quizQuestionsNumber: undefined,
@@ -34,7 +33,6 @@ class Quiz extends React.Component {
       .then((data) => {
         console.log(data);
         this.setState({
-          quizName: data.name,
           quizQuestions: data.questions,
           quizQuestionsNumber: data.questions.length
         });
@@ -128,14 +126,15 @@ class Quiz extends React.Component {
     else {
       return (
       <div>
-        {this.state.quizName 
+        {this.state.quizQuestions 
 
           ? <Question 
-              text={this.state.quizQuestions[this.state.quizIndex].question} submitAnswer={this.openDialog}
+              text={this.state.quizQuestions[this.state.quizIndex].text} submitAnswer={this.openDialog}
               answers ={this.state.quizQuestions[this.state.quizIndex].answers}
+              correctAnswer={this.state.quizQuestions[this.state.quizIndex].correctAnswer}
               checkAnswer={this.isAnswerCorrect}
               warning={this.state.noAnswerWarning}
-              type={this.state.quizQuestions[this.state.quizIndex].type} /> 
+              type={this.state.quizQuestions[this.state.quizIndex].questionType} /> 
 
           : <CircularProgress size={80} thickness={5} />}
 
