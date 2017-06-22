@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
+import LinearProgress from 'material-ui/LinearProgress';
 
 const Answers = ({answers, type}) => {
     
@@ -10,8 +11,8 @@ const Answers = ({answers, type}) => {
         <form id="answers-form">
             {answers.map(answer => {
                 return (
-                    <div key={answer._id}>
-                        <label>{answer.text}
+                    <div key={answer._id} className="answerField">
+                        <label>
                             <input
                                 className="answerBox"
                                 name="answers"
@@ -20,6 +21,7 @@ const Answers = ({answers, type}) => {
                                 : 'checkbox'}
                                 value={answer._id}
                             />
+                            {answer.text}
                         </label>
                     </div>
                   )})}
@@ -40,10 +42,16 @@ const Question = ({
     answers,
     verifyAnswer,
     warning,
-    type
+    type,
+    progress,
+    maxProgress
 }) => {
     return (
-        <Paper zDepth={2}>
+      <div className="question">
+        <Paper zDepth={2} className="questionCard">
+            <LinearProgress max={maxProgress}
+                        value={progress}
+                        mode="determinate"  />
             <h2>{text}</h2>
             <Answers answers={answers} 
                      type={type}  /> 
@@ -54,6 +62,7 @@ const Question = ({
               verifyAnswer().then(submitAnswer)
               }} />
         </Paper>
+      </div>
     );
 };
 

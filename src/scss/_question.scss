@@ -1,0 +1,41 @@
+.question {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+.questionCard {
+  height: 400px;
+  width: 95%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  padding: 15px;
+  @media (min-width: 400px) {
+    width: 80%;
+  }
+  @media (min-width: 1000px) {
+    width: 600px;
+  }
+  h2 {
+    text-align: center;
+  }
+}
+
+.answerField {
+  width: 50%;
+}
+
+.warning {
+  text-align: center;
+}
+
+#answers-form {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
