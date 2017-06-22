@@ -69,21 +69,16 @@ class Quiz extends React.Component {
   }
 
   openDialog = () => new Promise(resolve => {
-    if(this.state.currentAnswer !== null) {
-      document.getElementById('answers-form').reset();
-      if(this.state.currentAnswer) this.incrementScore();
-      this.setState(
-        () => ({ dialogOpen: true,
-                 noAnswerWarning: false 
-                }), resolve
-      );
-    }
-    else {
-      this.setState(
-        () => ({ noAnswerWarning: true }), resolve
-      );
-    }
-  })
+      if(!this.state.noAnswerWarning) {
+        document.getElementById('answers-form').reset();
+        if(this.state.currentAnswer) this.incrementScore();
+        this.setState(
+          () => ({ dialogOpen: true,
+                  noAnswerWarning: false 
+                  }), resolve
+        );
+      }
+    })
   
 
   closeDialog = () => {
@@ -102,14 +97,19 @@ class Quiz extends React.Component {
     if(userAnswers.length === correctAnswers.length) {
       for(const answer of userAnswers) {
         if(!correctAnswers.includes(answer)) {
-          this.setState(()=> ({ currentAnswer: false }), resolve)
+          this.setState(()=> ({ noAnswerWarning: false, currentAnswer: false }), resolve)
           return;
         }
       }
-      this.setState(()=> ({ currentAnswer: true }), resolve)
+      this.setState(()=> ({ noAnswerWarning: false, currentAnswer: true }), resolve)
     }
     else {
-      this.setState(() => ({ currentAnswer: false }), resolve)
+      if(userAnswers.length === 0) {
+        this.setState(() => ({ noAnswerWarning: true }), resolve)
+      }
+      else{
+        this.setState(() => ({ noAnswerWarning: false, currentAnswer: false }), resolve)
+      }
     }
   })
   
@@ -146,13 +146,15 @@ class Quiz extends React.Component {
       <div>
         {this.state.quizQuestions 
 
-          ? <Question 
-              text={this.state.quizQuestions[this.state.quizIndex].text} submitAnswer={this.openDialog}
-              answers ={this.state.quizQuestions[this.state.quizIndex].answers}
-              correctAnswer={this.state.quizQuestions[this.state.quizIndex].correctAnswer}
-              verifyAnswer={this.verifyAnswer}
-              warning={this.state.noAnswerWarning}
-              type={this.state.quizQuestions[this.state.quizIndex].questionType} /> 
+            ? <Question 
+                  text={this.state.quizQuestions[this.state.quizIndex].text} submitAnswer={this.openDialog}
+                  answers ={this.state.quizQuestions[this.state.quizIndex].answers}
+                  correctAnswer={this.state.quizQuestions[this.state.quizIndex].correctAnswer}
+                  verifyAnswer={this.verifyAnswer}
+                  warning={this.state.noAnswerWarning}
+                  type={this.state.quizQuestions[this.state.quizIndex].questionType}
+                  progress={this.state.quizIndex}
+                  maxProgress={this.state.quizQuestionsNumber} /> 
 
           : <CircularProgress size={80} thickness={5} />}
 
