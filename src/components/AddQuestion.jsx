@@ -7,13 +7,13 @@ import TextField from 'material-ui/TextField';
 
 const AnswerField = () => (
   <div className="answerField">
-      <TextField hintText="Answer" name="answers[]" />
-      <Checkbox label="correct" />
+      <TextField hintText="Answer" className='answerText' />
+      <Checkbox label="correct" className='answerCheck'/>
   </div>
 );
 
 
-const AddQuestion = ({ answers, addAnswer }) => {
+const AddQuestion = ({ answers, addAnswer, newQuestion }) => {
 
   return (
     <div className="addQuestionForm">
@@ -22,7 +22,7 @@ const AddQuestion = ({ answers, addAnswer }) => {
       <TextField hintText="Source (link)" name="source" id="source" />
 
       <div className="answers">
-        {answers.map(item => (<AnswerField />))}
+        {answers.map(item => (<AnswerField key={item}/>))}
 
         <RaisedButton 
           secondary label="Add another answer" 
@@ -30,7 +30,7 @@ const AddQuestion = ({ answers, addAnswer }) => {
           onTouchTap={addAnswer} />
         
       </div>
-      <RaisedButton secondary label="Add question" className="addQuestionBtn"/>
+      <RaisedButton secondary label="Add question" className="addQuestionBtn" onTouchTap={newQuestion}/>
     </div>
   );
 };
@@ -46,9 +46,3 @@ AddQuestion.propTypes = {
 };
 
 export default AddQuestion;
-
-
-<div className="answerField">
-          <TextField hintText="Answer" name="answers[]" />
-          <Checkbox label="correct" />
-        </div>
