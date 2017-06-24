@@ -1,6 +1,8 @@
 import React from 'react';
+import axios from 'axios';
 import AddQuestion from './AddQuestion';
 import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class Admin extends React.Component {
   constructor(props) {
@@ -10,6 +12,22 @@ class Admin extends React.Component {
       questions: []
     }
 
+  }
+
+  resetQuizForm = () => {
+    document.querySelector('.quiz-form').reset();
+    this.setState(
+      () => ({ questions: [] })
+    );
+  }
+
+  resetQuestionForm = () => {
+    this.setState(
+      (prevState) => ({ answers: [] })
+    );
+    document.getElementById('text').value = null;
+    document.getElementById('explanation').value = null;
+    document.getElementById('source').value = null;
   }
 
   addAnswer = () => {
@@ -25,7 +43,6 @@ class Admin extends React.Component {
     Array
       .from(document.querySelectorAll('.answerCheck input[type="checkbox"]'))
       .forEach((item, index) => {
-        console.log(item);
         if (item.checked) {
           correct.push(index)
         }
@@ -53,26 +70,53 @@ class Admin extends React.Component {
         _id: index
       }));
     newQuestion.correctAnswer = this.grabCorrectAnswers();
+    newQuestion.questionType = newQuestion.correctAnswer.length === 1 
+                                  ? 'regular' 
+                                  : 'multi-choice'
 
-    console.log(newQuestion);
-
+    this.resetQuestionForm();
+    this.setState(
+      (prevState) => ({ questions: prevState.questions.concat([newQuestion]) })
+    );
   };
+
+  addQuiz = () => {
+    const newQuiz = {};
+    newQuiz.name = document.getElementById('name').value;
+    newQuiz.description = document.getElementById('description').value;
+    newQuiz.imageURL = document.getElementById('imageURL').value;
+    newQuiz.resource = document.getElementById('resource').value;
+    newQuiz.questions = this.state.questions;
+    newQuiz.numberOfQuestions = this.state.questions.length;
+
+    this.resetQuizForm();
+    return newQuiz;
+  }
+
+  saveQuiz = () => {
+    axios.post('/api/quizzes/new', this.addQuiz())
+      .then(() => {console.log('Quiz saved successfully')})
+      .catch(() => {console.log('Quiz not really saved anywhere')})
+  }
+
+
 
   render() {
     return (
       <div>
 
-        <div className="quiz-form">
-          <TextField hintText="Quiz name" name="name" id="name"/>
-          <TextField hintText="Quiz description" name="description" id="description"/>
-          <TextField hintText="img url" name="imageURL" id="imageURL"/>
-          <TextField hintText="Resource title" name="resource" id="resource"/>
+        <form className="quiz-form">
+          <TextField floatingLabelText="Quiz name" name="name" id="name"/>
+          <TextField floatingLabelText="Description" name="description" id="description"/>
+          <TextField floatingLabelText="Image URL" name="imageURL" id="imageURL"/>
+          <TextField floatingLabelText="Resource" name="resource" id="resource"/>
           <AddQuestion
             answers={this.state.answers}
             addAnswer={this.addAnswer}
             newQuestion={this.addQuestion}/>
-
-        </div>
+          
+          <RaisedButton label="Add quiz" secondary onTouchTap={this.saveQuiz} />
+        </form>
 
       </div>
     );
