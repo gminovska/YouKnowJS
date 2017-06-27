@@ -3,15 +3,21 @@ import axios from 'axios';
 import AddQuestion from './AddQuestion';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
 
 class Admin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       answers: [],
-      questions: []
+      questions: [],
+      confirmationOpen: false
     }
 
+  }
+
+  closeConfirmation = () => {
+    this.setState(() => ({ confirmationOpen: false }))
   }
 
   resetQuizForm = () => {
@@ -95,7 +101,11 @@ class Admin extends React.Component {
 
   saveQuiz = () => {
     axios.post('/api/quizzes/new', this.addQuiz())
-      .then((response) => {console.log(response)})
+      .then(
+        (response) => {
+          console.log(response);
+          this.setState(() => ({ confirmationOpen: true }))
+        })
       .catch(() => {console.log('Quiz not really saved anywhere')})
   }
 
@@ -117,6 +127,14 @@ class Admin extends React.Component {
           
           <RaisedButton label="Add quiz" secondary onTouchTap={this.saveQuiz} />
         </form>
+
+        <Snackbar
+          open={this.state.confirmationOpen}
+          message="Quiz added"
+          autoHideDuration={5000}
+          onRequestClose={this.handleRequestClose}
+          style = {{ textAlign: "center" }}
+        />
 
       </div>
     );

@@ -36,13 +36,10 @@ const AddQuestion = ({ answers, addAnswer, newQuestion }) => {
 };
 
 
-
-AddQuestion.defaultProps = {
-  
-};
-
 AddQuestion.propTypes = {
-  
+  answers: PropTypes.array.isRequired,
+  addAnswer: PropTypes.func.isRequired,
+  newQuestion: PropTypes.func.isRequired
 };
 
 export default AddQuestion;
