@@ -13,7 +13,8 @@ import Nav from './Nav';
 import LandingPage from './LandingPage';
 import HallOfFame from './HallOfFame';
 import Quizzes from './Quizzes';
-import Quiz from './Quiz.jsx';
+import Quiz from './Quiz';
+import Admin from './Admin'
 
 injectTapEventPlugin();
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route exact path="/halloffame" component={HallOfFame} />
             <Route exact path="/quizzes" component={Quizzes} />
             <Route path="/quizzes/:id" component={Quiz} />
+            <Route path="/admin" component={Admin} />
             <Route render={() => (<p>404 - Not found </p>)} />
           </Switch>
         </div>

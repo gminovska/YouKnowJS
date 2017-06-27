@@ -5,18 +5,25 @@ const credentials = require('./credentials');
 const mongoose = require('mongoose');
 // const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
+const bodyParser = require('body-parser');
 const assert = require('assert');
 const app = express();
 
 //models
 const Quiz = require('./models/quiz');
 const populateDB = require('./data');
+
+//setup
 app.use(express.static(path.join(__dirname, 'build')));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 
 //database connection
 mongoose.connect(credentials.url);
 //populate database
-populateDB();
+// populateDB();
 //api routes
 app.get('/api/quizzes', (req, res) => {
 
@@ -41,6 +48,17 @@ app.get('/api/quizzes/:id', (req, res)=>{
         res.json(data);
       }
     })
+});
+
+app.post('/api/quizzes/new', (req, res) => {
+  // console.log(req.body);
+  Quiz.create(req.body, (err, result) =>{
+    if(err) {
+      console.log(err);
+    } else {
+      res.send('yabadabadoooo');
+    }
+  });  
 });
 /**
  * Send html file to the client, if nothing else was requested
