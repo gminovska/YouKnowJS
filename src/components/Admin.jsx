@@ -95,7 +95,7 @@ class Admin extends React.Component {
 
   saveQuiz = () => {
     axios.post('/api/quizzes/new', this.addQuiz())
-      .then(() => {console.log('Quiz saved successfully')})
+      .then((response) => {console.log(response)})
       .catch(() => {console.log('Quiz not really saved anywhere')})
   }
 

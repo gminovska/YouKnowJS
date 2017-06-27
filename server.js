@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 //database connection
 mongoose.connect(credentials.url);
 //populate database
-populateDB();
+// populateDB();
 //api routes
 app.get('/api/quizzes', (req, res) => {
 
@@ -51,9 +51,15 @@ app.get('/api/quizzes/:id', (req, res)=>{
 });
 
 app.post('/api/quizzes/new', (req, res) => {
-  console.log(req.body);
-  res.send('yabadabadoooo')
-})
+  // console.log(req.body);
+  Quiz.create(req.body, (err, result) =>{
+    if(err) {
+      console.log(err);
+    } else {
+      res.send('yabadabadoooo');
+    }
+  });  
+});
 /**
  * Send html file to the client, if nothing else was requested
  */
