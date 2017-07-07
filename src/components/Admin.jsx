@@ -17,6 +17,7 @@ class Admin extends React.Component {
   }
 
   closeConfirmation = () => {
+    console.log("You have just closed a snackbar");
     this.setState(() => ({ confirmationOpen: false }))
   }
 
@@ -128,6 +129,10 @@ class Admin extends React.Component {
           <RaisedButton label="Add quiz" secondary onTouchTap={this.saveQuiz} />
         </form>
 
+        /**
+         * TODO Fix a bug with snackbar popping out after clicking
+         * "Add another answer" button, once you have already submitted a quiz
+         */
         <Snackbar
           open={this.state.confirmationOpen}
           message="Quiz added"

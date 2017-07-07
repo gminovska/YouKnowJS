@@ -1,0 +1,21 @@
+.quizGrid {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin: 50px auto;
+  width: 100%;
+
+  @media (min-width: 1300px) {
+    width: 1300px;
+  }
+}
+
+
+.quizItem {
+  width: 280px;
+  height: 400px;
+  margin: 40px 20px;
+  border: 1px solid black;
+  
+}
