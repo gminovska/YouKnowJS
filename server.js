@@ -60,6 +60,18 @@ app.post('/api/quizzes/new', (req, res) => {
     }
   });  
 });
+
+app.post('/api/login', (req, res) => {
+  console.log('We got a request!!!!!! yahooo!')
+  console.log(req.body.email);
+  res.send("Yoyoyo dawg!")
+})
+
+app.post('/api/signup', (req, res) => {
+  console.log('Somebody wants to sign up!')
+  console.log(req.body.email);
+  res.send("Yoyoyo dawg!")
+})
 /**
  * Send html file to the client, if nothing else was requested
  */
