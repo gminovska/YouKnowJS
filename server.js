@@ -19,16 +19,16 @@ const populateDB = require('./data');
 //general setup
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.urlencoded({
-    extended: true
+  extended: true
 }));
 app.use(bodyParser.json());
 
 //passport configuration
 app.use(require('express-session')({
-    secret: "The earth is flat",
-    resave: false,
-    saveUninitialized: false
-    //TODO include secure cookies in production
+  secret: "The earth is flat",
+  resave: false,
+  saveUninitialized: false
+  //TODO include secure cookies in production
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -54,21 +54,26 @@ mongoose.connect(credentials.url);
 app.get('/api/quizzes', (req, res) => {
 
   Quiz.find()
-    .select({ questions: 0})
-    .exec((err, data)=>{
-      if(err) {
+    .select({
+      questions: 0
+    })
+    .exec((err, data) => {
+      if (err) {
         console.log(err);
       } else {
-         res.json(data);
+        res.json(data);
       }
     })
 });
 
-app.get('/api/quizzes/:id', (req, res)=>{
+app.get('/api/quizzes/:id', (req, res) => {
   Quiz.findById(req.params.id)
-    .select({questions: 1, _id: 0})
-    .exec((err, data)=>{
-      if(err) {
+    .select({
+      questions: 1,
+      _id: 0
+    })
+    .exec((err, data) => {
+      if (err) {
         console.log(err);
       } else {
         res.json(data);
@@ -78,36 +83,39 @@ app.get('/api/quizzes/:id', (req, res)=>{
 
 app.post('/api/quizzes/new', (req, res) => {
   // console.log(req.body);
-  Quiz.create(req.body, (err, result) =>{
-    if(err) {
+  Quiz.create(req.body, (err, result) => {
+    if (err) {
       console.log(err);
     } else {
       res.send('yabadabadoooo');
     }
-  });  
+  });
 });
 
-app.post('/api/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login' }));
+app.post('/api/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login'
+}));
 
 app.post('/api/signup', (req, res) => {
-   var newUser = new User({
-     username: req.body.email
-   });
+  var newUser = new User({
+    username: req.body.email
+  });
 
-   User.register(newUser, req.body.password, (err, result) =>{
-      if(err) {
-        console.log(err);
-        res.send(err.message);
-      } 
-      req.login(result, (err => {
-        if(err) console.log(err);
-        res.redirect('/');
-      }));
-   });  
+  User.register(newUser, req.body.password, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.send(err.message);
+    }
+    req.login(result, (err => {
+      if (err) console.log(err);
+      res.redirect('/');
+    }));
+  });
 });
 
 app.get('/api/authenticate', (req, res) => {
-  console.log(req.user);
+  // console.log(req.user);
   res.json(req.user);
 })
 
@@ -116,6 +124,20 @@ app.get('/api/logout', (req, res) => {
   res.redirect('/');
 })
 
+app.post('/api/results/new', (req, res) => {
+  if (req.user) {
+    User.findById(req.user._id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        result.quizzes.push(req.body);
+        result.save();
+        console.log("Score saved!");
+      }
+    });
+  }
+  res.status(200).send();
+});
 /**
  * Send html file to the client, if nothing else was requested
  */

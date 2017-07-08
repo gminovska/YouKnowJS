@@ -16,7 +16,6 @@ class Quizzes extends React.Component {
     fetch('/api/quizzes')
       .then( (response) =>{ 
         let data = response.json();
-        console.log(data);
         return data;
       })
       .then( (response) => {this.setState({

@@ -4,9 +4,7 @@ import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import LinearProgress from 'material-ui/LinearProgress';
 
-const Answers = ({answers, type}) => {
-    
-            
+const Answers = ({answers, type}) => {        
     return (
         <form id="answers-form">
             {answers.map(answer => {

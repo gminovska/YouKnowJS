@@ -6,7 +6,6 @@ const QuizGrid = ({ quizzes}) => {
 
     const displayInfo = (e) => {
       e.currentTarget.classList.toggle('displayInfo');
-      console.log(e.currentTarget.classList);
     }
 
     return (
