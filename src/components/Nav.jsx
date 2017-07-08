@@ -34,20 +34,41 @@ GuestNavButtons.propTypes = {
   showSignupForm: PropTypes.func.isRequired
 };
 
+
+
 class Nav extends React.Component {
   constructor() {
     super();
     this.state = {
-      logged: false,
-      username: undefined,
+      user: false,
+      errorMsg: undefined,
       loginDialogOpen: false,
       signupDialogOpen: false,
       logoutDialogOpen: false
     };
   }
 
+  componentDidMount = () => {
+    fetch('/api/authenticate', {credentials: "include"})
+      .then(res => {
+        if(!res) return Promise.reject("Wrong password or email")
+        return res.json();
+      })
+      .then(
+        json => { this.setState(() => ({
+          user: json
+        })) },
+        err => { console.log(err) }
+      )
+  }
+
   handleLogout = () => {
-    this.setState({logged: false, username: undefined, logoutDialogOpen: true});
+    fetch('/api/logout', {credentials: "include"})
+      .then(
+        res => {
+          this.setState({user: false, logoutDialogOpen: true});
+        }
+      )
   }
 
   closeLogoutDialog = () => {
@@ -108,8 +129,8 @@ class Nav extends React.Component {
         <AppBar
           title="YouKnowJS"
           showMenuIconButton={false}
-          iconElementRight={this.state.logged
-          ? <UserNavButtons username={this.state.username} logout={this.handleLogout}/>
+          iconElementRight={this.state.user
+          ? <UserNavButtons username={this.state.user.username} logout={this.handleLogout}/>
           : <GuestNavButtons
             showLoginForm={this.openLoginDialog}
             showSignupForm={this.openSignupDialog}/>}/>
@@ -124,10 +145,11 @@ class Nav extends React.Component {
         <Dialog
           title="Log in"
           modal
+          errorMsg = {this.state.errorMsg}
           open={this.state.loginDialogOpen}
           onRequestClose={this.closeLoginDialog}>
           <form action="/api/login" method="POST">
-            <TextField name="email" floatingLabelText="Email address"/><br/>
+            <TextField name="username" floatingLabelText="Email address"/><br/>
             <TextField name="password" floatingLabelText="Password"/><br/>
             {loginActions}
           </form>

@@ -42,11 +42,12 @@ mongoose.connect(credentials.url);
 //populate database
 // populateDB();
 
+// DUNNO WAT TO DO
 //make the user object globally available
-app.use(function(req, res, next){
-    res.locals.user = req.user;
-    next();
-});
+// app.use(function(req, res, next){
+//     res.locals.user = req.user;
+//     next();
+// });
 
 
 //api routes
@@ -86,29 +87,35 @@ app.post('/api/quizzes/new', (req, res) => {
   });  
 });
 
-app.post('/api/login', (req, res) => {
-  console.log('We got a request!!!!!! yahooo!')
-  console.log(req.body.email);
-  res.send("Yoyoyo dawg!")
-})
+app.post('/api/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login' }));
 
 app.post('/api/signup', (req, res) => {
    var newUser = new User({
      username: req.body.email
    });
 
-   User.register(newUser, req.body.password, (err, newUser) =>{
+   User.register(newUser, req.body.password, (err, result) =>{
       if(err) {
         console.log(err);
         res.send(err.message);
       } 
-      //currently not working...
-      passport.authenticate('local')(req, res, () => {
-            console.log(user);
-            res.redirect('/quizzes');            
-        });
+      req.login(result, (err => {
+        if(err) console.log(err);
+        res.redirect('/');
+      }));
    });  
 });
+
+app.get('/api/authenticate', (req, res) => {
+  console.log(req.user);
+  res.json(req.user);
+})
+
+app.get('/api/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+})
+
 /**
  * Send html file to the client, if nothing else was requested
  */
