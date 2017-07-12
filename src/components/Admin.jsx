@@ -110,7 +110,9 @@ class Admin extends React.Component {
       .catch(() => {console.log('Quiz not really saved anywhere')})
   }
 
-
+  /**
+   * TODO put information about recommended length of description
+   */
 
   render() {
     return (
