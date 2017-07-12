@@ -1,6 +1,6 @@
 import React from 'react';
 import { matchPath } from 'react-router'
-
+import axios from 'axios';
 import CircularProgress from 'material-ui/CircularProgress';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
@@ -31,7 +31,6 @@ class Quiz extends React.Component {
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         this.setState({
           quizQuestions: data.questions,
           quizQuestionsNumber: data.questions.length
@@ -63,6 +62,10 @@ class Quiz extends React.Component {
   }
 
   displayScore = () => {
+    axios.post("/api/results/new", {
+      _id: this.props.match.params.id,
+      correctAnswers: this.state.score
+    }, { withCredentials: true})
     this.setState(
       () => ({ displayResult: true })
     )
