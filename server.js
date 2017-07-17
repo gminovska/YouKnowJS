@@ -136,8 +136,13 @@ app.post('/api/results/new', (req, res) => {
       }
     });
   }
-  res.status(200).send();
+  res.json(req.user);
 });
+
+app.post('/api/feedback/new', (req, res) => {
+  console.log(req.body);
+  res.status(200).send();
+})
 /**
  * Send html file to the client, if nothing else was requested
  */

@@ -13,6 +13,7 @@ class Quiz extends React.Component {
     super(props);
     
     this.state = {
+      quizId: this.props.match.params.id,
       score: 0,
       quizQuestions: undefined,
       quizIndex: 0,
@@ -21,7 +22,8 @@ class Quiz extends React.Component {
       displayResult: false,
       dialogOpen: false,
       currentAnswer: null,
-      noAnswerWarning: false
+      noAnswerWarning: false,
+      userLoggedIn: undefined,
     }
   }
 
@@ -31,6 +33,7 @@ class Quiz extends React.Component {
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         this.setState({
           quizQuestions: data.questions,
           quizQuestionsNumber: data.questions.length
@@ -66,9 +69,15 @@ class Quiz extends React.Component {
       _id: this.props.match.params.id,
       correctAnswers: this.state.score
     }, { withCredentials: true})
-    this.setState(
-      () => ({ displayResult: true })
-    )
+      .then(
+        (res) => {
+          this.setState(
+            () => ({ 
+              displayResult: true, 
+              userLoggedIn: res.data ? true : false})
+          )
+        }
+      )
   }
 
   openDialog = () => new Promise(resolve => {
@@ -141,7 +150,9 @@ class Quiz extends React.Component {
     if(this.state.displayResult) {
       return (
         <Result score={this.state.score}
-                total={this.state.quizQuestionsNumber} />
+                total={this.state.quizQuestionsNumber}
+                userLoggedIn = {this.state.userLoggedIn}
+                quizId={this.props.match.params.id} />
       )
     }
     else {
