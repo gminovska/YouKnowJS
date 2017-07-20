@@ -143,6 +143,34 @@ app.post('/api/feedback/new', (req, res) => {
   console.log(req.body);
   res.status(200).send();
 })
+
+app.get('/api/halloffame', (req, res) => {
+
+  Quiz.find()
+    .select({_id: 1})
+    .exec((err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        const quizIds = data.map(x => ({"$elemMatch" : {_id: x._id, score:1}}));
+        User.find({"quizzes": {$all: quizIds}},
+                  {username: 1, __v: 1}, 
+                  {sort: {__v: 1}})
+            .exec((err, data) => {
+              if(err) {
+                console.log(err)
+              }
+              else {
+                res.json(data);
+              }
+            })
+      }
+    })
+
+});
+
+
+
 /**
  * Send html file to the client, if nothing else was requested
  */

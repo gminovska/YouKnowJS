@@ -13,7 +13,7 @@ var UserSchema =  new mongoose.Schema({
             type: Date,
             default: Date.now 
         },
-        correctAnswers: Number
+        score: Number
     }]
 });
 

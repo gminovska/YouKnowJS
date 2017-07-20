@@ -6,6 +6,7 @@ import FlatButton from 'material-ui/FlatButton';
 import AppBar from 'material-ui/AppBar';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import { darkBlack } from 'material-ui/styles/colors';
 
 const UserNavButtons = ({username, logout}) => (
   <div className="navButtons">
@@ -125,10 +126,17 @@ class Nav extends React.Component {
           onTouchTap = {this.closeSignupDialog} />
     ];
 
+    const titleStyle = {
+      textDecoration: "none",
+      cursor: "pointer",
+      width: "150px",
+      color: darkBlack
+    };
+
     return (
       <div>
         <AppBar
-          title="YouKnowJS"
+          title={<Link to="/" style={titleStyle}>YouKnowJS</Link>}
           showMenuIconButton={false}
           iconElementRight={this.state.user
           ? <UserNavButtons username={this.state.user.username} logout={this.handleLogout}/>
