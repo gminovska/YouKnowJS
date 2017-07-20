@@ -37,8 +37,8 @@ GuestNavButtons.propTypes = {
 
 
 class Nav extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       user: false,
       errorMsg: undefined,
@@ -49,6 +49,7 @@ class Nav extends React.Component {
   }
 
   componentDidMount = () => {
+    console.log(this.props);
     fetch('/api/authenticate', {credentials: "include"})
       .then(res => {
         if(!res) return Promise.reject("Wrong password or email")
