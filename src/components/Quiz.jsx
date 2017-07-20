@@ -67,7 +67,7 @@ class Quiz extends React.Component {
   displayScore = () => {
     axios.post("/api/results/new", {
       _id: this.props.match.params.id,
-      correctAnswers: this.state.score
+      score: (this.state.score / this.state.quizQuestionsNumber).toFixed(2)
     }, { withCredentials: true})
       .then(
         (res) => {
