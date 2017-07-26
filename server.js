@@ -82,7 +82,6 @@ app.get('/api/quizzes/:id', (req, res) => {
 });
 
 app.post('/api/quizzes/new', (req, res) => {
-  // console.log(req.body);
   Quiz.create(req.body, (err, result) => {
     if (err) {
       console.log(err);
@@ -93,11 +92,10 @@ app.post('/api/quizzes/new', (req, res) => {
 });
 
  
-
+ 
 app.post('/api/login',
   passport.authenticate('local'), (req, res) => {
     const user = {
-      __v: req.user.__v,
       _id: req.user._id,
       quizzes: req.user.quizzes,
       username: req.user.username
@@ -108,44 +106,48 @@ app.post('/api/login',
 
 app.post('/api/signup', (req, res) => {
   var newUser = new User({
-    username: req.body.email
+    username: req.body.username
   });
 
   User.register(newUser, req.body.password, (err, result) => {
     if (err) {
-      console.log(err);
-      res.send(err.message);
+      res.status(401).send({err});
     }
-    req.login(result, (err => {
+    else {
+      req.login(result, (err => {
       if (err) console.log(err);
 
       const user = {
-        __v: req.user.__v,
-        _id: req.user._id,
-        quizzes: req.user.quizzes,
-        username: req.user.username
+        _id: result._id,
+        quizzes: result.quizzes,
+        username: result.username
       }
 
       res.json({user});
-    }));
+      }));
+    }
   });
 });
 
 app.get('/api/authenticate', (req, res) => {
-  const user = {
-      __v: req.user.__v,
+  if (req.user) {
+    const user = {
       _id: req.user._id,
       quizzes: req.user.quizzes,
       username: req.user.username
     }
-  res.json(user);
+    res.json(user)
+  }
+  else {
+    res.json({user: false});
+  }
 })
 
 app.get('/api/logout', (req, res) => {
   req.logout();
   res.json({user: false});
 })
-
+ 
 app.post('/api/results/new', (req, res) => {
   if (req.user) {
     User.findById(req.user._id, (err, result) => {

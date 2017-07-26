@@ -19,14 +19,14 @@ const LandingPage = () => (
           </h1>
           <h2>You can find out</h2>
         </div>
-        <p>
+        <div>
           <Link to="/quizzes">
             <RaisedButton 
               label="Take a quiz" 
               primary
               labelStyle={{ color: darkBlack }} />
           </Link>
-        </p>
+        </div>
     </div>
   </div>
 );

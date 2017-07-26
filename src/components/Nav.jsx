@@ -59,15 +59,15 @@ class Nav extends React.Component {
         return res.json();
       })
       .then(
-        json => { this.setState(() => ({
-          user: json
+        json => {this.setState(() => ({
+          user: json.username ? json : false
         })) },
         err => { console.log(err) }
       )
   }
 
   closeLogoutDialog = () => {
-    this.setState({logoutDialogOpen: false});
+    this.setState({logoutDialogOpen: false, errorMsg: ""});
   }
 
   openLoginDialog = () => {
@@ -78,7 +78,8 @@ class Nav extends React.Component {
     this.setState({
       loginDialogOpen: false,
       username: "",
-      password: ""
+      password: "",
+      errorMsg: ""
     });
   }
 
@@ -90,7 +91,8 @@ class Nav extends React.Component {
     this.setState({
       signupDialogOpen: false,
       username: "",
-      password: ""
+      password: "",
+      errorMsg: ""
     });
   }
 
@@ -102,8 +104,8 @@ class Nav extends React.Component {
     this.setState({password: e.target.value})
   }
 
-  loginUser = () => {
 
+  sendUserData = (route, msg, cb) => {
     const data = {
       username: this.state.username,
       password: this.state.password
@@ -113,52 +115,77 @@ class Nav extends React.Component {
       withCredentials: true
     };
     
-    axios.post('/api/login', data, options)
-      .then(res => {this.setState({
-        user: res.data.user, 
-        errorMsg: ""
-      })})
-      .then(() => {this.closeLoginDialog()})
-      .catch(err => {this.setState({errorMsg: "Wrong email or password"})})
-  };
-
-  signupUser = () => {
-    axios.post('/api/signup', {
-      username: this.state.username,
-      password: this.state.password
-    })
+    axios.post(route, data, options)
+      .then(res => {this.setState({user: res.data.user})})
+      .then(() => {cb()})
+      .catch(err => {this.setState({errorMsg: msg})})
   }
 
 
+  loginUser = () => {
+    this.sendUserData(
+      '/api/login', 
+      "Wrong email or password", 
+      this.closeLoginDialog
+    )
+  }
+
+  signupUser = () => {
+    this.sendUserData(
+      '/api/signup', 
+      "Username is taken",
+      this.closeSignupDialog
+    )
+  }
+
+  handleLogout = () => {
+    axios.get('/api/logout', {withCredentials: true})
+      .then((res) => {this.setState({
+        user: res.data.user, 
+        logoutDialogOpen: true
+      })})
+      .catch((err) => {this.setState({
+        errorMsg: err.message,
+        logoutDialogOpen: true
+      })})
+  }
+
 
   render() {
-    const logoutActions = [< FlatButton label = "OK" primary keyboardFocused onTouchTap = { this.closeLogoutDialog } />];
+    const logoutActions = [
+    <FlatButton 
+      label = "OK" 
+      primary 
+      keyboardFocused 
+      onTouchTap = { this.closeLogoutDialog }
+      key = "1" />];
 
     const loginActions = [ 
       < RaisedButton 
           label = "Cancel"
           primary 
-          onTouchTap = {this.closeLoginDialog} />,
+          onTouchTap = {this.closeLoginDialog} 
+          key = "2" />,
       < RaisedButton 
-          label = "Submit" 
+          label = "Login" 
           primary 
           keyboardFocused 
-          onTouchTap = {this.loginUser} />
+          onTouchTap = {this.loginUser} 
+          key = "3" />
     ];
 
     const signupActions = [ 
       < RaisedButton 
           label = "Cancel" 
           primary 
-          onTouchTap = {this.closeSignupDialog} />,
+          onTouchTap = {this.closeSignupDialog} 
+          key="4"/>,
       < RaisedButton 
-          label = "Submit" 
+          label = "Signup" 
           primary 
           keyboardFocused 
-          onTouchTap = {() => {
-            this.signupUser();
-            this.closeSignupDialog();
-          }} />
+          onTouchTap = {this.signupUser}
+          key = "5"/>
     ];
 
     const titleStyle = {
@@ -184,7 +211,9 @@ class Nav extends React.Component {
           modal={false}
           open={this.state.logoutDialogOpen}
           onRequestClose={this.closeLogoutDialog}>
-          You have been logged out.
+          {this.state.errorMsg
+            ? this.state.errorMsg
+            : "You have been logged out"}
         </Dialog>
 
         <Dialog
@@ -223,6 +252,9 @@ class Nav extends React.Component {
               value={this.state.password}
               onChange={this.handlePasswordChange}/>
             <br/>
+            {this.state.errorMsg
+                ? this.state.errorMsg
+                : null}
             {signupActions}
         </Dialog>
       </div>
