@@ -7,6 +7,7 @@ import AppBar from 'material-ui/AppBar';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { darkBlack } from 'material-ui/styles/colors';
+import axios from 'axios';
 
 const UserNavButtons = ({username, logout}) => (
   <div className="navButtons">
@@ -42,18 +43,19 @@ class Nav extends React.Component {
     super(props);
     this.state = {
       user: false,
-      errorMsg: undefined,
+      errorMsg: "",
       loginDialogOpen: false,
       signupDialogOpen: false,
-      logoutDialogOpen: false
+      logoutDialogOpen: false,
+      username: "",
+      password: ""
     };
   }
 
   componentDidMount = () => {
-    console.log(this.props);
     fetch('/api/authenticate', {credentials: "include"})
       .then(res => {
-        if(!res) return Promise.reject("Wrong password or email")
+        if(!res) return Promise.reject()
         return res.json();
       })
       .then(
@@ -61,15 +63,6 @@ class Nav extends React.Component {
           user: json
         })) },
         err => { console.log(err) }
-      )
-  }
-
-  handleLogout = () => {
-    fetch('/api/logout', {credentials: "include"})
-      .then(
-        res => {
-          this.setState({user: false, logoutDialogOpen: true});
-        }
       )
   }
 
@@ -82,7 +75,11 @@ class Nav extends React.Component {
   }
 
   closeLoginDialog = () => {
-    this.setState({loginDialogOpen: false});
+    this.setState({
+      loginDialogOpen: false,
+      username: "",
+      password: ""
+    });
   }
 
   openSignupDialog = () => {
@@ -90,15 +87,52 @@ class Nav extends React.Component {
   }
 
   closeSignupDialog = () => {
-    this.setState({signupDialogOpen: false});
+    this.setState({
+      signupDialogOpen: false,
+      username: "",
+      password: ""
+    });
+  }
+
+  handleNameChange = (e) => {
+    this.setState({username: e.target.value})
+  }
+
+  handlePasswordChange = (e) => {
+    this.setState({password: e.target.value})
+  }
+
+  loginUser = () => {
+
+    const data = {
+      username: this.state.username,
+      password: this.state.password
+    };
+
+    const options = {
+      withCredentials: true
+    };
+    
+    axios.post('/api/login', data, options)
+      .then(res => {this.setState({
+        user: res.data.user, 
+        errorMsg: ""
+      })})
+      .then(() => {this.closeLoginDialog()})
+      .catch(err => {this.setState({errorMsg: "Wrong email or password"})})
+  };
+
+  signupUser = () => {
+    axios.post('/api/signup', {
+      username: this.state.username,
+      password: this.state.password
+    })
   }
 
 
 
   render() {
-    const logoutActions = [< FlatButton label = "OK" primary keyboardFocused onTouchTap = {
-        this.closeLogoutDialog
-      } />];
+    const logoutActions = [< FlatButton label = "OK" primary keyboardFocused onTouchTap = { this.closeLogoutDialog } />];
 
     const loginActions = [ 
       < RaisedButton 
@@ -108,9 +142,8 @@ class Nav extends React.Component {
       < RaisedButton 
           label = "Submit" 
           primary 
-          type="submit"
           keyboardFocused 
-          onTouchTap = {this.closeLoginDialog} />
+          onTouchTap = {this.loginUser} />
     ];
 
     const signupActions = [ 
@@ -119,11 +152,13 @@ class Nav extends React.Component {
           primary 
           onTouchTap = {this.closeSignupDialog} />,
       < RaisedButton 
-          type="submit" 
           label = "Submit" 
           primary 
           keyboardFocused 
-          onTouchTap = {this.closeSignupDialog} />
+          onTouchTap = {() => {
+            this.signupUser();
+            this.closeSignupDialog();
+          }} />
     ];
 
     const titleStyle = {
@@ -151,29 +186,44 @@ class Nav extends React.Component {
           onRequestClose={this.closeLogoutDialog}>
           You have been logged out.
         </Dialog>
+
         <Dialog
           title="Log in"
           modal
-          errorMsg = {this.state.errorMsg}
           open={this.state.loginDialogOpen}
           onRequestClose={this.closeLoginDialog}>
-          <form action="/api/login" method="POST">
-            <TextField name="username" floatingLabelText="Email address"/><br/>
-            <TextField name="password" floatingLabelText="Password"/><br/>
+            <TextField 
+              floatingLabelText="Email address"
+              onChange={this.handleNameChange}
+              value={this.state.username}/>
+              <br/>
+            <TextField 
+              floatingLabelText="Password"
+              onChange={this.handlePasswordChange}
+              value={this.state.password}/>
+              <br/>
+              {this.state.errorMsg
+                ? this.state.errorMsg
+                : null}
             {loginActions}
-          </form>
-          
         </Dialog>
+
         <Dialog
           title="Sign up"
           modal
           open={this.state.signupDialogOpen}
           onRequestClose={this.closeSignupDialog}>
-          <form action="/api/signup" method="POST">
-            <TextField name="email" floatingLabelText="Email address"/><br/>
-            <TextField name="password" floatingLabelText="Password"/><br/>
+            <TextField  
+              floatingLabelText="Email address"
+              onChange={this.handleNameChange}
+              value={this.state.username}/>
+            <br/>
+            <TextField  
+              floatingLabelText="Password"
+              value={this.state.password}
+              onChange={this.handlePasswordChange}/>
+            <br/>
             {signupActions}
-          </form>
         </Dialog>
       </div>
     );
