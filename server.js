@@ -208,15 +208,15 @@ app.get('/api/halloffame', (req, res) => {
 
 app.get('/api/scoreboard', (req, res) => {
   User.findById(req.user._id)
-    .populate({path: "quizzes.id", select: "name"})
+    .populate('quizzes._id')
     .exec((err, result) => {
     if(err) {
       console.log(err)
       res.json({ errMsg: err})
     }
     else {
-      console.log(result)
-      res.json({ quizzes: result.quizzes})
+      console.log(result);
+      res.json({ quizzes: result.quizzes});
     }
   })
 });
