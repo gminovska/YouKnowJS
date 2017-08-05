@@ -15,22 +15,24 @@ class Result extends React.Component {
       userLoggedIn: props.userLoggedIn,
       highScore: props.score/props.total === 1 ? true : false,
       dialogOpen: false,
+      ThankyouDialogOpen: false,
       feedbackText: "",
     }
   }
 
   sendFeedback = () => {
     const data = {
-      text: this.state.feedbackText,
+      feedbackText: this.state.feedbackText,
       quizId: this.props.quizId
     };
     const options = {
       withCredentials: true
     }
 
-    axios.post("/api/feedback/new", data, options);
+    axios.post("/api/feedback/new", data, options)
+      .then(this.closeDialog)
+      .then(this.openThankyouDialog)
 
-    this.closeDialog();
   }
 
   handleChange = (e) => {
@@ -43,6 +45,14 @@ class Result extends React.Component {
 
   closeDialog = () => {
     this.setState(() => ({ dialogOpen: false }))
+  }
+
+  openThankyouDialog = () => {
+    this.setState(() => ({ ThankyouDialogOpen: true }))
+  }
+
+  closeThankyouDialog = () => {
+    this.setState(() => ({ ThankyouDialogOpen: false }))
   }
 
   render() {
@@ -59,6 +69,14 @@ class Result extends React.Component {
           keyboardFocused 
           onTouchTap = {this.sendFeedback} />
     ];
+
+    const ThankyouDialogActions = [
+      < RaisedButton
+        label="OK"
+        primary
+        keyboardFocused
+        onTouchTap={this.closeThankyouDialog} />
+    ]
 
     return (
       <div className="results-page">
@@ -94,6 +112,14 @@ class Result extends React.Component {
             id="feedbackField" 
             value={this.state.feedbackText}
             onChange={this.handleChange} />
+        </Dialog>
+
+        <Dialog
+          title="Thank you"
+          actions={ThankyouDialogActions}
+          open={this.state.ThankyouDialogOpen}
+          onRequestClose={this.closeThankyouDialog}>
+            Your feedback have been submitted. 
         </Dialog>
       </div>
     );
