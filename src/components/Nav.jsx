@@ -11,7 +11,7 @@ import axios from 'axios';
 
 const UserNavButtons = ({username, logout}) => (
   <div className="navButtons">
-    <div className="welcomeMsg">Hello, {username}!</div>
+    <Link to="/scores"><FlatButton label="Your scores" /></Link>
     <Link to="/halloffame"><FlatButton label="Hall of Fame"/></Link>
     <FlatButton label="Logout" onTouchTap={logout}/>
   </div>
