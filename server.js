@@ -14,6 +14,7 @@ const app = express();
 //models
 const Quiz = require('./models/quiz');
 const User = require('./models/user');
+const Feedback = require('./models/feedback');
 const populateDB = require('./data');
 
 //general setup
@@ -164,7 +165,19 @@ app.post('/api/results/new', (req, res) => {
 });
 
 app.post('/api/feedback/new', (req, res) => {
-  console.log(req.body);
+  
+  const data = {
+    quizId: req.body.quizId,
+    feedbackText: req.body.feedbackText,
+    userId: req.user._id
+  }
+
+  Feedback.create(data, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+  })
+
   res.status(200).send();
 })
 
