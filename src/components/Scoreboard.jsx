@@ -2,6 +2,15 @@ import React from 'react';
 import axios from 'axios';
 import Loader from 'material-ui/CircularProgress';
 import { Link } from 'react-router-dom';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
+
 
 
 class Scoreboard extends React.Component {
@@ -25,13 +34,21 @@ class Scoreboard extends React.Component {
           this.setState({ quizzes: res.data.quizzes })
         }
        })
-      .catch((err) => { this.setState({ errMsg: err}) })
+      .catch((err) => { this.setState({ errMsg: "You need to be logged in"}) })
   }
 
   render() {
 
+    const fontSize = window.innerWidth > 400 ? "16px" : "11px";
+
     const errMsg = this.state.errMsg;
     const quizzes = this.state.quizzes;
+
+    const styles = {
+      textAlign: "center", 
+      paddingTop: "30px",
+      fontSize: fontSize  
+    }
 
     if (!errMsg && !quizzes) {
       return (
@@ -64,9 +81,28 @@ class Scoreboard extends React.Component {
       else {
         return (
           <div className="scoreboard">
-          yo
-          
-        </div>
+            <Table>
+              <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                <TableRow>
+                  <TableHeaderColumn style={styles}>Date</TableHeaderColumn>
+                  <TableHeaderColumn style={styles}>Quiz</TableHeaderColumn>
+                  <TableHeaderColumn style={styles}>Score</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody displayRowCheckbox={false} stripedRows={true}>
+                {quizzes.map(quiz => (
+                  <TableRow key={quiz.date}>
+                    <TableRowColumn style={styles}>
+                      {quiz.date.substring(0, quiz.date.indexOf("T"))}
+                    </TableRowColumn>
+                    {/*TODO change the props from quiz._id to something else. See also User model and Quiz component line 69 */}
+                    <TableRowColumn style={styles}>{quiz._id.name}</TableRowColumn>
+                    <TableRowColumn style={styles}>{(quiz.score * 100) + "%"}</TableRowColumn>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )
       }
     }
@@ -77,3 +113,4 @@ class Scoreboard extends React.Component {
 
 
 export default Scoreboard;
+ 

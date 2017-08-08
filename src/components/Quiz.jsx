@@ -66,6 +66,7 @@ class Quiz extends React.Component {
 
   displayScore = () => {
     axios.post("/api/results/new", {
+      // TODO change the name of this thing. See also User model
       _id: this.props.match.params.id,
       score: (this.state.score / this.state.quizQuestionsNumber).toFixed(2)
     }, { withCredentials: true})

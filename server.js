@@ -207,8 +207,9 @@ app.get('/api/halloffame', (req, res) => {
 });
 
 app.get('/api/scoreboard', (req, res) => {
+  // TODO change the quizzes._id to something else. See also User model and Quiz component line 69
   User.findById(req.user._id)
-    .populate('quizzes._id')
+    .populate('quizzes._id', '-_id name')
     .exec((err, result) => {
     if(err) {
       console.log(err)

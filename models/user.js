@@ -5,6 +5,7 @@ var UserSchema =  new mongoose.Schema({
     username: String,
     password: String,
     quizzes: [{
+      // TODO change the name of this thing
         _id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Quiz"
