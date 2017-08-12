@@ -180,7 +180,9 @@ class Quiz extends React.Component {
           open={this.state.dialogOpen} >
 
             {this.state.quizQuestions
-              ? this.state.quizQuestions[this.state.quizIndex].explanation
+              ? <p className="explanation">
+                  {this.state.quizQuestions[this.state.quizIndex].explanation}
+                </p>
               : null}
 
         </Dialog>
