@@ -22,6 +22,7 @@ const muiTheme = getMuiTheme({
   palette: {
     primary1Color: yellow500,
     textColor: darkBlack,
+    alternateTextColor: darkBlack,
   },
   appBar: {
     textColor: darkBlack,
