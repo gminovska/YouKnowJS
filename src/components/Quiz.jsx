@@ -2,10 +2,10 @@ import React from 'react';
 import { matchPath } from 'react-router'
 import axios from 'axios';
 import CircularProgress from 'material-ui/CircularProgress';
-import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import Question from './Question';
 import Result from './Result';
+import RaisedButton from 'material-ui/RaisedButton';
 
 
 class Quiz extends React.Component {
@@ -130,7 +130,7 @@ class Quiz extends React.Component {
   render() {
 
     const actions = [
-      <FlatButton
+      <RaisedButton
         label="Next"
         primary
         onTouchTap={() => {
@@ -138,7 +138,7 @@ class Quiz extends React.Component {
           this.nextQuestion();
         }}
       />,
-      <FlatButton
+      <RaisedButton
         label="See Results"
         primary
         onTouchTap={() => {
@@ -181,7 +181,9 @@ class Quiz extends React.Component {
           open={this.state.dialogOpen} >
 
             {this.state.quizQuestions
-              ? this.state.quizQuestions[this.state.quizIndex].explanation
+              ? <p className="explanation">
+                  {this.state.quizQuestions[this.state.quizIndex].explanation}
+                </p>
               : null}
 
         </Dialog>

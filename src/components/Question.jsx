@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import LinearProgress from 'material-ui/LinearProgress';
+import { yellow500 } from 'material-ui/styles/colors';
 
 const Answers = ({answers, type}) => {        
     return (
@@ -56,9 +57,10 @@ const Question = ({
             {warning
                 ? <p className="warning">You need to select an answer!</p>
                 : null}
-            <RaisedButton label="Submit answer" onTouchTap={() => {
-              verifyAnswer().then(submitAnswer)
-              }} />
+            <RaisedButton 
+              label="Submit answer" 
+              backgroundColor={yellow500}
+              onTouchTap={() => {verifyAnswer().then(submitAnswer)}} />
         </Paper>
       </div>
     );

@@ -155,7 +155,7 @@ class Nav extends React.Component {
 
 
   render() {
-    
+
     const loginActions = [ 
       < RaisedButton 
           label = "Cancel"
@@ -205,6 +205,7 @@ class Nav extends React.Component {
         <Dialog
           title="Log in"
           modal
+          actions={loginActions}
           open={this.state.loginDialogOpen}
           onRequestClose={this.closeLoginDialog}>
             <TextField 
@@ -214,18 +215,19 @@ class Nav extends React.Component {
               <br/>
             <TextField 
               floatingLabelText="Password"
+              type="password"
               onChange={this.handlePasswordChange}
               value={this.state.password}/>
               <br/>
               {this.state.errorMsg
-                ? this.state.errorMsg
+                ? <div className="errorMsg">{this.state.errorMsg}</div>
                 : null}
-            {loginActions}
         </Dialog>
 
         <Dialog
           title="Sign up"
           modal
+          actions={signupActions}
           open={this.state.signupDialogOpen}
           onRequestClose={this.closeSignupDialog}>
             <TextField  
@@ -235,13 +237,13 @@ class Nav extends React.Component {
             <br/>
             <TextField  
               floatingLabelText="Password"
+              type="password"
               value={this.state.password}
               onChange={this.handlePasswordChange}/>
             <br/>
             {this.state.errorMsg
-                ? this.state.errorMsg
+                ? <div className="errorMsg">{this.state.errorMsg}</div>
                 : null}
-            {signupActions}
         </Dialog>
       </div>
     );
