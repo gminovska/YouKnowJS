@@ -11,7 +11,7 @@ import axios from 'axios';
 
 const UserNavButtons = ({username, logout}) => (
   <div className="navButtons">
-    <div className="welcomeMsg">Hello, {username}!</div>
+    <Link to="/scores"><FlatButton label="Your scores" /></Link>
     <Link to="/halloffame"><FlatButton label="Hall of Fame"/></Link>
     <FlatButton label="Logout" onTouchTap={logout}/>
   </div>
@@ -118,6 +118,7 @@ class Nav extends React.Component {
     axios.post(route, data, options)
       .then(res => {this.setState({user: res.data.user})})
       .then(() => {cb()})
+      .then(() => {window.location.reload()})
       .catch(err => {this.setState({errorMsg: msg})})
   }
 
@@ -143,7 +144,9 @@ class Nav extends React.Component {
       .then((res) => {this.setState({
         user: res.data.user, 
         logoutDialogOpen: true
-      })})
+        })
+      window.location.reload()
+      })
       .catch((err) => {this.setState({
         errorMsg: err.message,
         logoutDialogOpen: true
@@ -152,14 +155,7 @@ class Nav extends React.Component {
 
 
   render() {
-    const logoutActions = [
-    <FlatButton 
-      label = "OK" 
-      primary 
-      keyboardFocused 
-      onTouchTap = { this.closeLogoutDialog }
-      key = "1" />];
-
+    
     const loginActions = [ 
       < RaisedButton 
           label = "Cancel"
@@ -205,16 +201,6 @@ class Nav extends React.Component {
           : <GuestNavButtons
             showLoginForm={this.openLoginDialog}
             showSignupForm={this.openSignupDialog}/>}/>
-        <Dialog
-          title="Logged out"
-          actions={logoutActions}
-          modal={false}
-          open={this.state.logoutDialogOpen}
-          onRequestClose={this.closeLogoutDialog}>
-          {this.state.errorMsg
-            ? this.state.errorMsg
-            : "You have been logged out"}
-        </Dialog>
 
         <Dialog
           title="Log in"
